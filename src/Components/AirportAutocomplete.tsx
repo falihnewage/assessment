@@ -94,8 +94,8 @@ console.log(originRef?.current?.value ,'org ref');
       lng: results.routes[0].legs[0].start_location.lng()
     })
     setRender(true)
-    // let distance = calculateDistance(results?.routes[0]?.legs[0]?.end_location?.lat(), results.routes[0].legs[0].end_location.lng(), results.routes[0].legs[0].start_location.lat(), results.routes[0].legs[0].start_location.lng())
-    // setDistance(distance)
+    let distance = calculateDistance(results?.routes[0]?.legs[0]?.end_location?.lat(), results.routes[0].legs[0].end_location.lng(), results.routes[0].legs[0].start_location.lat(), results.routes[0].legs[0].start_location.lng())
+    setDistance(distance)
     console.log(  results.routes[0].legs[0].end_location.lat(),
      results.routes[0].legs[0].end_location.lng()
   ,'lat');
@@ -106,28 +106,28 @@ console.log(originRef?.current?.value ,'org ref');
     strokeOpacity: 1,
     strokeWeight: 2,
   };
-  // function calculateDistance(lat1, lon1, lat2, lon2) {
-  //   console.log(lat1, lon1, lat2, lon2, 'inside function');
-  //   // Constants
-  //   const R = 6371000; // Earth radius in meters
+  function calculateDistance(lat1:any, lon1:any, lat2:any, lon2:any) {
+    console.log(lat1, lon1, lat2, lon2, 'inside function');
+    // Constants
+    const R = 6371000; // Earth radius in meters
 
-  //   // Convert latitude and longitude to radians
-  //   const lat1Radians = lat1 * Math.PI / 180;
-  //   const lon1Radians = lon1 * Math.PI / 180;
-  //   const lat2Radians = lat2 * Math.PI / 180;
-  //   const lon2Radians = lon2 * Math.PI / 180;
+    // Convert latitude and longitude to radians
+    const lat1Radians = lat1 * Math.PI / 180;
+    const lon1Radians = lon1 * Math.PI / 180;
+    const lat2Radians = lat2 * Math.PI / 180;
+    const lon2Radians = lon2 * Math.PI / 180;
 
-  //   // Calculate the difference in latitude and longitude
-  //   const deltaLat = lat2Radians - lat1Radians;
-  //   const deltaLon = lon2Radians - lon1Radians;
+    // Calculate the difference in latitude and longitude
+    const deltaLat = lat2Radians - lat1Radians;
+    const deltaLon = lon2Radians - lon1Radians;
 
-  //   // Calculate the distance between the two points
-  //   const distance = Math.sqrt(
-  //     Math.pow(deltaLat, 2) + Math.pow(Math.sin(deltaLon), 2) * Math.cos(lat1Radians) * Math.cos(lat2Radians)
-  //   );
+    // Calculate the distance between the two points
+    const distance = Math.sqrt(
+      Math.pow(deltaLat, 2) + Math.pow(Math.sin(deltaLon), 2) * Math.cos(lat1Radians) * Math.cos(lat2Radians)
+    );
 
-  //   return (  distance * R/1852).toFixed(2); ;
-  // }
+    return (  distance * R/1852).toFixed(2); ;
+  }
 
   function clearRoute() {
     setDirectionsResponse(null);
@@ -170,7 +170,7 @@ console.log(originRef?.current?.value ,'org ref');
           <Polyline  path={[location1, location2]} options={polylineOptions} />
           </div>
           }
-          
+
           
           {/* {directionsResponse && (
             <DirectionsRenderer directions={directionsResponse} />
