@@ -17,17 +17,18 @@ import { FaLocationArrow, FaTimes } from 'react-icons/fa';
 import {
   useJsApiLoader,
   GoogleMap,
-  Marker,
+  
   Autocomplete,
-  DirectionsRenderer,
+ 
   Polyline,
+  Marker,
 } from '@react-google-maps/api';
 
-const center = { lat: 51.5, lng: -0.09 };
+
 
 function App() {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+    googleMapsApiKey: 'AIzaSyCToFPMUnuzoEEhzMu8pBrNRT2uTzqT9tM',
     libraries: ['places'],
   });
 
@@ -37,17 +38,11 @@ function App() {
   );
   const [distance, setDistance] = useState<string>('');
   const [render, setRender] = useState<boolean>(false);
-  const [duration, setDuration] = useState<string>('');
-  const Location1 = {
-    lat: 51.5,
-    lng: -0.09,
-  };
+  const [center, setcenter] = useState<any>({
+    lat: 43.000000,
+     lng: -75.000000
+  });
 
-  // Location 2: Latitude and Longitude
-  const Location2 = {
-    lat: 51.52,
-    lng: -0.12,
-  };
   const [location1, setLocation1] = useState<any>({
     lat: null,
     lng: null
@@ -84,7 +79,7 @@ console.log(originRef?.current?.value ,'org ref');
     console.log(results.routes[0].legs[0].distance,'results');
     
     setDistance(results.routes[0].legs[0].distance?.text || '');
-    setDuration(results.routes[0].legs[0].duration?.text || '');
+    
     await setLocation1({
       lat: results.routes[0].legs[0].end_location.lat(),
       lng: results.routes[0].legs[0].end_location.lng()
@@ -94,6 +89,7 @@ console.log(originRef?.current?.value ,'org ref');
       lng: results.routes[0].legs[0].start_location.lng()
     })
     setRender(true)
+    setcenter({lat:results.routes[0].legs[0].start_location.lat(),lng:results.routes[0].legs[0].start_location.lng()})
     let distance = calculateDistance(results?.routes[0]?.legs[0]?.end_location?.lat(), results.routes[0].legs[0].end_location.lng(), results.routes[0].legs[0].start_location.lat(), results.routes[0].legs[0].start_location.lng())
     setDistance(distance)
     console.log(  results.routes[0].legs[0].end_location.lat(),
@@ -129,13 +125,7 @@ console.log(originRef?.current?.value ,'org ref');
     return (  distance * R/1852).toFixed(2); ;
   }
 
-  function clearRoute() {
-    setDirectionsResponse(null);
-    setDistance('');
-    setDuration('');
-    if (originRef.current) originRef.current.value = '';
-    if (destinationRef.current) destinationRef.current.value = '';
-  }
+ 
  
   return (
     <Flex
@@ -162,9 +152,15 @@ console.log(originRef?.current?.value ,'org ref');
           onLoad={(map) => setMap(map as google.maps.Map)}
         >
           {/* <Marker position={center} /> */}
-          {/* <Marker position={Location1} /> */}
+          {render&&
+          <div>
+             <Marker position={location1} />
           
-          {/* <Marker position={location2} /> */}
+          <Marker position={location2} />
+          </div>
+         
+          }
+          
           {render && 
           <div>
           <Polyline  path={[location1, location2]} options={polylineOptions} />
@@ -172,9 +168,7 @@ console.log(originRef?.current?.value ,'org ref');
           }
 
           
-          {/* {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
-          )} */}
+         
         </GoogleMap>
       </Box>
       <Box
@@ -211,17 +205,12 @@ console.log(originRef?.current?.value ,'org ref');
             <Button colorScheme='pink' type='submit' onClick={calculateRoute}>
               Calculate Route
             </Button>
-            <IconButton
-              aria-label='center back'
-              icon={<FaTimes />}
-              onClick={clearRoute}
-            />
+            
           </ButtonGroup>
         </HStack>
         <HStack spacing={4} mt={4} justifyContent='space-between'>
-          <Text>Distance: {distance} </Text>
-         
-          <IconButton
+         {distance && <Text>Distance: {distance} Nautical Miles</Text>} 
+         {distance && <IconButton
             aria-label='center back'
             icon={<FaLocationArrow />}
             isRound
@@ -231,7 +220,8 @@ console.log(originRef?.current?.value ,'org ref');
                 map.setZoom(15);
               }
             }}
-          />
+          />}
+          
         </HStack>
       </Box>
     </Flex>
